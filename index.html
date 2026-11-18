@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hệ Thống Quản Lý Chất Lượng - Tsukuba Diecasting Vietnam</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-page: #edf2fa;
+      --bg-surface: #ffffff;
+      --bg-sidebar: #f8fafc;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+      --primary: #1d4ed8;
+      --primary-light: #2563eb;
+      --accent-bar: #3b82f6;
+      --card-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
+      --radius-lg: 16px;
+      --radius-md: 12px;
+    }
+
+    body.dark {
+      --bg-page: #0b1120;
+      --bg-surface: #111827;
+      --bg-sidebar: #0f172a;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --border-color: #1e293b;
+      --card-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-page);
+      color: var(--text-main);
+      line-height: 1.45;
+      min-height: 100vh;
+      display: flex;
+      transition: background-color 0.25s, color 0.25s;
+    }
+
+    /* ================= SIDEBAR ================= */
+    .sidebar {
+      width: 268px;
+      min-width: 268px;
+      background: var(--bg-sidebar);
+      border-right: 2px solid var(--primary-light);
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      transition: margin-left 0.25s ease, background-color 0.25s;
+    }
+
+    .sidebar.collapsed {
+      margin-left: -268px;
+    }
+
+    .sidebar-brand {
+      padding: 16px 14px 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .brand-logo {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 2px solid var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 13px;
+      color: var(--primary);
+      background: #fff;
+      flex-shrink: 0;
+    }
+
+    .brand-text h1 {
+      font-size: 11.5px;
+      font-weight: 800;
+      line-height: 1.25;
+      letter-spacing: 0.2px;
+      text-transform: uppercase;
+    }
+
+    .brand-badge {
+      display: inline-block;
+      margin-top: 4px;
+      background: var(--primary);
+      color: #fff;
+      font-size: 9px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 4px;
+      letter-spacing: 0.3px;
+      max-width: 185px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .sidebar-search {
+      padding: 12px 14px 6px;
+    }
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 8px 12px;
+    }
+
+    .search-box svg {
+      width: 15px;
+      height: 15px;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+
+    .search-box input {
+      border: none;
+      outline: none;
+      background: transparent;
+      width: 100%;
+      font-family: inherit;
+      font-size: 12.5px;
+      color: var(--text-main);
+    }
+
+    .sidebar-nav {
+      flex: 1;
+      overflow-y: auto;
+      padding: 10px 12px 16px;
+    }
+
+    .nav-group {
+      margin-bottom: 14px;
+    }
+
+    .nav-group-title {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 10.5px;
+      font-weight: 700;
+      color: #475569;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      margin: 8px 4px;
+    }
+
+    body.dark .nav-group-title {
+      color: #94a3b8;
+    }
+
+    .nav-group-title::before {
+      content: '';
+      width: 3px;
+      height: 12px;
+      background: var(--primary-light);
+      border-radius: 2px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      text-decoration: none;
+      color: var(--text-main);
+      font-size: 12.5px;
+      font-weight: 500;
+      margin-bottom: 4px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .nav-item:hover {
+      border-color: #93c5fd;
+      transform: translateX(2px);
+    }
+
+    .nav-item.active {
+      background: linear-gradient(90deg, #1d4ed8, #2563eb);
+      color: #ffffff;
+      border-color: transparent;
+      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.28);
+    }
+
+    .nav-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: #fff;
+    }
+
+    .nav-icon svg {
+      width: 15px;
+      height: 15px;
+    }
+
+    .nav-label {
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .nav-chevron {
+      width: 14px;
+      height: 14px;
+      opacity: 0.55;
+      flex-shrink: 0;
+    }
+
+    .bg-slate { background: #475569; }
+    .bg-glass { background: rgba(255, 255, 255, 0.22); }
+    .bg-emerald { background: #10b981; }
+    .bg-amber { background: #f59e0b; }
+    .bg-indigo { background: #3b82f6; }
+    .bg-royal { background: #2563eb; }
+    .bg-orange { background: #f97316; }
+
+    .sidebar-footer {
+      padding: 12px 16px;
+      border-top: 1px solid var(--border-color);
+      font-size: 11px;
+      background: var(--bg-surface);
+    }
+
+    .sidebar-footer strong {
+      display: block;
+      font-size: 11.5px;
+      color: var(--text-main);
+    }
+
+    .sidebar-footer span {
+      color: var(--text-muted);
+    }
+
+    /* ================= MAIN LAYOUT ================= */
+    .main-wrapper {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* TOPBAR */
+    .topbar {
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border-color);
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .icon-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-surface);
+      color: var(--text-main);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .icon-btn:hover {
+      background: var(--bg-page);
+    }
+
+    .home-badge {
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      background: var(--primary);
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .page-title h2 {
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .page-title span {
+      font-size: 11px;
+      font-style: italic;
+      color: var(--text-muted);
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .top-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 9px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-surface);
+      color: var(--text-main);
+      font-family: inherit;
+      font-size: 12.5px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .top-pill:hover {
+      background: var(--bg-page);
+    }
+
+    .top-pill svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    /* ================= CONTENT CONTAINER ================= */
+    .content {
+      padding: 18px 20px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      max-width: 1440px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    /* HERO BANNER */
+    .hero-banner {
+      position: relative;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      padding: 48px 24px 24px;
+      color: #ffffff;
+      background:
+        radial-gradient(circle at 78% 45%, rgba(34, 197, 94, 0.25), transparent 48%),
+        linear-gradient(100deg, #060b16 0%, #0f172a 44%, #143628 100%);
+      box-shadow: 0 10px 26px rgba(15, 23, 42, 0.16);
+    }
+
+    /* Họa tiết ESG mờ bên phải banner */
+    .esg-watermark {
+      position: absolute;
+      right: 6%;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      opacity: 0.16;
+      user-select: none;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .esg-tags {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      font-weight: 800;
+      font-size: 13px;
+      letter-spacing: 1px;
+    }
+
+    .esg-tag {
+      background: rgba(255, 255, 255, 0.25);
+      padding: 8px 18px;
+      border-radius: 999px;
+      text-align: center;
+    }
+
+    .esg-big {
+      font-size: 92px;
+      font-weight: 800;
+      letter-spacing: 4px;
+      line-height: 1;
+    }
+
+    .hero-ribbon {
+      position: absolute;
+      top: 0;
+      left: 0;
+      background: linear-gradient(90deg, #1e40af, #2563eb);
+      padding: 7px 34px 7px 20px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      clip-path: polygon(0 0, 100% 0, 91% 100%, 0% 100%);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-title {
+      font-size: clamp(22px, 2.8vw, 34px);
+      font-weight: 800;
+      letter-spacing: 0.4px;
+      margin-bottom: 6px;
+    }
+
+    .hero-subtitle {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 13px;
+      font-style: italic;
+      color: #cbd5e1;
+      margin-bottom: 16px;
+    }
+
+    .hero-subtitle::before,
+    .hero-subtitle::after {
+      content: '';
+      width: 34px;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.35);
+    }
+
+    .user-greeting {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 12.5px;
+      color: #e2e8f0;
+      margin-bottom: 22px;
+      backdrop-filter: blur(6px);
+    }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .kpi-card {
+      background: rgba(15, 23, 42, 0.56);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: var(--radius-md);
+      padding: 14px 18px;
+      backdrop-filter: blur(8px);
+    }
+
+    .kpi-value {
+      font-size: 24px;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 4px;
+    }
+
+    .kpi-label {
+      font-size: 12px;
+      color: #cbd5e1;
+    }
+
+    .text-white { color: #ffffff; }
+    .text-amber { color: #f59e0b; }
+    .text-danger { color: #ef4444; }
+    .text-success { color: #22c55e; }
+
+    /* ================= SIPOC SECTION ================= */
+    .sipoc-section {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 18px 20px;
+      box-shadow: var(--card-shadow);
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-title::before {
+      content: '';
+      width: 4px;
+      height: 20px;
+      border-radius: 3px;
+      background: var(--primary);
+    }
+
+    .section-title h3 {
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .month-tag {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .section-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .sipoc-flow {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr auto 1fr;
+      align-items: stretch;
+      gap: 8px;
+    }
+
+    .flow-arrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary-light);
+      font-weight: 700;
+    }
+
+    .sipoc-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-top: 3px solid var(--primary);
+      border-radius: 14px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .sipoc-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.08);
+    }
+
+    .sipoc-card-head {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .sipoc-letter {
+      width: 24px;
+      height: 24px;
+      border-radius: 7px;
+      background: #0f172a;
+      color: #ffffff;
+      font-size: 12px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    body.dark .sipoc-letter {
+      background: var(--primary);
+    }
+
+    .sipoc-name {
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .sipoc-num {
+      font-size: 26px;
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 4px;
+    }
+
+    .sipoc-desc {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      min-height: 34px;
+    }
+
+    .sipoc-running {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      margin-top: 4px;
+      margin-bottom: 10px;
+    }
+
+    /* Mini Bar Chart */
+    .mini-chart {
+      display: flex;
+      align-items: flex-end;
+      gap: 3px;
+      height: 36px;
+      margin-bottom: 12px;
+    }
+
+    .mini-bar {
+      flex: 1;
+      background: #818cf8;
+      border-radius: 2px 2px 0 0;
+      min-height: 2px;
+      transition: opacity 0.15s;
+    }
+
+    .mini-bar:hover {
+      opacity: 0.75;
+    }
+
+    .sipoc-footer {
+      border-top: 1px solid var(--border-color);
+      padding-top: 10px;
+      font-size: 11.5px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      color: var(--text-main);
+    }
+
+    .sipoc-footer-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+    }
+
+    .sipoc-footer-row svg {
+      width: 14px;
+      height: 14px;
+      flex-shrink: 0;
+      margin-top: 2px;
+      color: var(--text-muted);
+    }
+
+    .overdue {
+      color: #dc2626;
+      font-weight: 700;
+    }
+
+    .section-footnote {
+      margin-top: 14px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .section-footnote a {
+      color: var(--primary-light);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .section-footnote a:hover {
+      text-decoration: underline;
+    }
+
+    /* ================= RESPONSIVE ================= */
+    @media (max-width: 1220px) {
+      .sipoc-flow {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
+      .flow-arrow {
+        display: none;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+      }
+      .kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .sipoc-flow,
+      .kpi-grid {
+        grid-template-columns: 1fr;
+      }
+      .topbar-right .hide-mobile {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-logo">DV</div>
+      <div class="brand-text">
+        <h1>Hệ thống quản lý<br />chất lượng</h1>
+        <span class="brand-badge">TSUKUBA DIECASTING VIETN...</span>
+      </div>
+    </div>
+
+    <div class="sidebar-search">
+      <div class="search-box">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.3-4.3"></path>
+        </svg>
+        <input type="text" id="menuSearch" placeholder="Tìm chức năng..." />
+      </div>
+    </div>
+
+    <nav class="sidebar-nav" id="sidebarNav">
+      <div class="nav-group">
+        <div class="nav-group-title">Hướng dẫn sử dụng</div>
+        <a class="nav-item" href="#">
+          <span class="nav-icon bg-slate">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+          </span>
+          <span class="nav-label">Hướng dẫn sử dụng ...</span>
+          <svg class="nav-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+        </a>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-group-title">Tổng quan</div>
+        <a class="nav-item active" href="#">
+          <span class="nav-icon bg-glass">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          </span>
+          <span class="nav-label">Tổng quan</span>
+          <svg class="nav-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+        </a>
+        <a class="nav-item" href="#">
+          <span class="nav-icon bg-emerald">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="2" width="6" height="5" rx="1"/><rect x="2" y="17" width="6" height="5" rx="1"/><rect x="16" y="17" width="6" height="5" rx="1"/><path d="M12 7v5m-7 5v-3h14v3"/></svg>
+          </span>
+          <span class="nav-label">Sơ đồ tổ chức & chứ...</span>
+          <svg class="nav-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+        </a>
+        <a class="nav-item" href="#">
+          <span class="nav-icon bg-amber">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </span>
+          <span class="nav-label">Mục tiêu bộ phận & ...</span>
+          <svg class="nav-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+        </a>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-group-title">S_Quản lý nhà cung cấp</div>
+        <a class="nav-item" href="#">
+          <span class="nav-icon bg-indigo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13" rx="2"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+          </span>
+          <span class="nav-label">Bảng quản lý nhà cu...</span>
+          <svg class="nav-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+        </a>
+        <a class="nav-item" href="#">
+          <span class="nav-icon bg-royal">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+          </span>
+          <span class="nav-label">IQC</span>
+          <svg class="nav-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+        </a>
+        <a class="nav-item" href="#">
+          <span class="nav-icon bg-orange">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          </span>
+          <span class="nav-label">IQC_Phiếu LLPS (CAR)</span>
+          <svg class="nav-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+        </a>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-group-title">PQC_Chất lượng công đoạn</div>
+        <a class="nav-item" href="#">
+          <span class="nav-icon bg-royal">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c.26.6.77 1 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          </span>
+          <span class="nav-label">Kiểm tra công đoạn PQC</span>
+          <svg class="nav-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+        </a>
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <strong>Phòng QC · TDV 3 FAC (HN · HY · PN)</strong>
+      <span>Máy chủ nội bộ · v1.9</span>
+    </div>
+  </aside>
+
+  <!-- MAIN AREA -->
+  <div class="main-wrapper">
+    <!-- TOP HEADER -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="icon-btn" id="toggleSidebar" title="Đóng/mở menu">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+        <div class="home-badge">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            <polyline points="9 22 9 12 15 12 15 22"/>
+          </svg>
+        </div>
+        <div class="page-title">
+          <h2>Tổng quan</h2>
+          <span>TSUKUBA DIECASTING VIETNAM</span>
+        </div>
+      </div>
+
+      <div class="topbar-right">
+        <button class="top-pill hide-mobile">← Quay lại</button>
+        <button class="top-pill">文A 日本語</button>
+        <button class="icon-btn" id="themeToggle" title="Chế độ sáng/tối">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
+        <button class="top-pill">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+          Dương Mạnh Hùng
+        </button>
+        <button class="top-pill">Đăng xuất</button>
+      </div>
+    </header>
+
+    <!-- CONTENT -->
+    <main class="content">
+      <!-- HERO BANNER -->
+      <section class="hero-banner">
+        <div class="hero-ribbon">TSUKUBA DIECASTING VIETNAM</div>
+
+        <div class="esg-watermark" aria-hidden="true">
+          <div class="esg-tags">
+            <div class="esg-tag">ENVIRONMENTAL</div>
+            <div class="esg-tag">SOCIAL</div>
+          </div>
+          <div class="esg-big">ESG</div>
+        </div>
+
+        <div class="hero-content">
+          <h1 class="hero-title">HỆ THỐNG QUẢN LÝ CHẤT LƯỢNG</h1>
+          <div class="hero-subtitle">From Japan to the world</div>
+
+          <div>
+            <span class="user-greeting">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+              </svg>
+              Xin chào, Dương Mạnh Hùng · Quản trị
+            </span>
+          </div>
+
+          <div class="kpi-grid">
+            <div class="kpi-card">
+              <div class="kpi-value text-white">5.816</div>
+              <div class="kpi-label">Bản ghi đang quản lý</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-value text-amber">76</div>
+              <div class="kpi-label">Việc đang mở</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-value text-danger">77</div>
+              <div class="kpi-label">Quá hạn</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-value text-success">0</div>
+              <div class="kpi-label">Sắp đến hạn</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SIPOC SECTION -->
+      <section class="sipoc-section">
+        <div class="section-header">
+          <div class="section-title">
+            <h3>Chuỗi chất lượng S · I · P · O · C</h3>
+            <span class="month-tag">T11/26</span>
+          </div>
+          <div class="section-actions">
+            <button class="top-pill">⊞ Dashboard đầy đủ</button>
+            <button class="top-pill">📊 Phân tích lỗi</button>
+          </div>
+        </div>
+
+        <div class="sipoc-flow">
+          <!-- CARD S -->
+          <article class="sipoc-card">
+            <div>
+              <div class="sipoc-card-head">
+                <span class="sipoc-letter">S</span>
+                <span class="sipoc-name">Nhà cung cấp</span>
+              </div>
+              <div class="sipoc-num">0</div>
+              <div class="sipoc-desc">vụ lỗi liên quan NCC</div>
+              <div class="sipoc-running">đang chạy (T10: 12)</div>
+              <div class="mini-chart" data-bars="85,45,35,65,40,30,45,35,40,20"></div>
+            </div>
+            <div class="sipoc-footer">
+              <div class="sipoc-footer-row">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                <span>LLPS: <strong>28</strong> đang mở · <span class="overdue">26 quá hạn</span></span>
+              </div>
+              <div class="sipoc-footer-row">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13" rx="2"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+                <span>26 NCC trong danh sách</span>
+              </div>
+            </div>
+          </article>
+
+          <div class="flow-arrow">›</div>
+
+          <!-- CARD I -->
+          <article class="sipoc-card">
+            <div>
+              <div class="sipoc-card-head">
+                <span class="sipoc-letter">I</span>
+                <span class="sipoc-name">IQC · đầu vào</span>
+              </div>
+              <div class="sipoc-num">0</div>
+              <div class="sipoc-desc">vụ lỗi · IQC</div>
+              <div class="sipoc-running">đang chạy (T10: 12)</div>
+              <div class="mini-chart" data-bars="65,30,18,18,100,25,85,50,90,70"></div>
+            </div>
+            <div class="sipoc-footer" style="border-top-color: transparent;"></div>
+          </article>
+
+          <div class="flow-arrow">›</div>
+
+          <!-- CARD P -->
+          <article class="sipoc-card">
+            <div>
+              <div class="sipoc-card-head">
+                <span class="sipoc-letter">P</span>
+                <span class="sipoc-name">PQC · công đoạn</span>
+              </div>
+              <div class="sipoc-num">4</div>
+              <div class="sipoc-desc">vụ lỗi · PQC, Làm mẫu, TM, MC, PT, DC</div>
+              <div class="sipoc-running">đang chạy (T10: 392)</div>
+              <div class="mini-chart" data-bars="55,60,72,82,78,60,92,85,100,5"></div>
+            </div>
+            <div class="sipoc-footer">
+              <div class="sipoc-footer-row">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                <span>LLPS: <strong>19</strong> đang mở · <span class="overdue">19 quá hạn</span></span>
+              </div>
+            </div>
+          </article>
+
+          <div class="flow-arrow">›</div>
+
+          <!-- CARD O -->
+          <article class="sipoc-card">
+            <div>
+              <div class="sipoc-card-head">
+                <span class="sipoc-letter">O</span>
+                <span class="sipoc-name">OQC · xuất hàng</span>
+              </div>
+              <div class="sipoc-num">0</div>
+              <div class="sipoc-desc">vụ lỗi · OQC, N5</div>
+              <div class="sipoc-running">đang chạy (T10: 33)</div>
+              <div class="mini-chart" data-bars="95,62,100,82,70,70,5,5,5,5"></div>
+            </div>
+            <div class="sipoc-footer">
+              <div class="sipoc-footer-row">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                <span>LLPS: <strong>20</strong> đang mở · <span class="overdue">19 quá hạn</span></span>
+              </div>
+            </div>
+          </article>
+
+          <div class="flow-arrow">›</div>
+
+          <!-- CARD C -->
+          <article class="sipoc-card">
+            <div>
+              <div class="sipoc-card-head">
+                <span class="sipoc-letter">C</span>
+                <span class="sipoc-name">Khách hàng · claim</span>
+              </div>
+              <div class="sipoc-num">0</div>
+              <div class="sipoc-desc">claim</div>
+              <div class="sipoc-running">đang chạy (T10: 15)</div>
+              <div class="mini-chart" data-bars="65,45,35,62,55,75,100,55,62,40"></div>
+            </div>
+            <div class="sipoc-footer">
+              <div class="sipoc-footer-row">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                <span>Hạn trả lời: <span class="overdue">4 quá hạn</span> · 0 sắp hạn</span>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <p class="section-footnote">
+          Nhóm phát hiện chưa xếp vào I / P / O / C (12 tháng): — 10 · PN 1 –
+          <a href="#">chỉnh ở Cài đặt</a>
+        </p>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    // Render biểu đồ cột mini từ data-bars
+    document.querySelectorAll('.mini-chart').forEach(chart => {
+      const values = chart.dataset.bars.split(',').map(Number);
+      values.forEach(val => {
+        const bar = document.createElement('div');
+        bar.className = 'mini-bar';
+        bar.style.height = val + '%';
+        chart.appendChild(bar);
+      });
+    });
+
+    // Đóng / mở Sidebar
+    const sidebar = document.getElementById('sidebar');
+    document.getElementById('toggleSidebar').addEventListener('click', () => {
+      sidebar.classList.toggle('collapsed');
+    });
+
+    // Chế độ sáng / tối
+    document.getElementById('themeToggle').addEventListener('click', () => {
+      document.body.classList.toggle('dark');
+    });
+
+    // Lọc menu chức năng trên sidebar
+    document.getElementById('menuSearch').addEventListener('input', (e) => {
+      const keyword = e.target.value.toLowerCase().trim();
+      document.querySelectorAll('.nav-item').forEach(item => {
+        const text = item.textContent.toLowerCase();
+        item.style.display = text.includes(keyword) ? 'flex' : 'none';
+      });
+    });
+
+    // Chuyển trạng thái active khi bấm menu
+    document.querySelectorAll('.nav-item').forEach(item => {
+      item.addEventListener('click', (e) => {
+        e.preventDefault();
+        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+        item.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>
